@@ -1,5 +1,6 @@
 package ru.kata.spring.boot_security.demo.services;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -13,16 +14,12 @@ import ru.kata.spring.boot_security.demo.repo.UserRepo;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 @Slf4j
 public class UserServiceImpl implements UserService {
     private final UserRepo userRepo;
     private final PasswordEncoder passwordEncoder;
 
-    @Autowired
-    public UserServiceImpl(UserRepo userRepo, @Lazy PasswordEncoder passwordEncoder) {
-        this.userRepo = userRepo;
-        this.passwordEncoder = passwordEncoder;
-    }
 
     @Transactional(readOnly = true)
     @Override
@@ -55,7 +52,7 @@ public class UserServiceImpl implements UserService {
     public void updateUser(User user) {
         String oldPassword = findUserById(user.getId()).getPassword();
         String newPassword = user.getPassword();
-        if(!oldPassword.equals(newPassword)) {
+        if (!oldPassword.equals(newPassword)) {
             user.setPassword(passwordEncoder.encode(user.getPassword()));
         }
         userRepo.save(user);
