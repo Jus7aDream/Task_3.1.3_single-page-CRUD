@@ -44,7 +44,7 @@
         <span class="font-weight-bold" th:text="${user.getUsername()}"></span>
         with roles:
         <span th:each="role : ${user.getRoles()}">
-            <span th:text="${role}"></span>
+            <span th:text="${role.getName().replace('ROLE_', '')}"></span>
         </span>
     </a>
     <ul class="navbar-nav px-3">
@@ -112,21 +112,21 @@
                                         <td th:text="${userFromDB.getFirstName()}"></td>
                                         <td th:text="${userFromDB.getLastName()}"></td>
                                         <td th:text="${userFromDB.getAge()}"></td>
-                                        <td th:text="${userFromDB.getEmail()}"></td>
+                                        <td th:text="${userFromDB.getUsername()}"></td>
                                         <td>
                                             <span th:each="role : ${userFromDB.getRoles()}">
-                                                <span th:text="${role}"></span>
+                                                <span th:text="${role.getName().replace('ROLE_', '')}"></span>
                                             </span>
                                         </td>
                                         <td>
                                             <!-- Button trigger modal Edit-->
                                             <button type="button" class="btn btn-info" data-toggle="modal"
-                                                    th:data-target="${'#editUser'+ userFromDB.id}">
+                                                    th:data-target="${'#editUser'+ userFromDB.getId()}">
                                                 Edit
                                             </button>
                                             <!-- Button trigger modal Edit-end-->
                                             <!-- Modal Edit-->
-                                            <div class="modal fade" th:id="${'editUser'+ userFromDB.id}"
+                                            <div class="modal fade" th:id="${'editUser'+ userFromDB.getId()}"
                                                  tabindex="-1"
                                                  aria-labelledby="editModalLabel" aria-hidden="true">
                                                 <div class="modal-dialog">
@@ -140,14 +140,14 @@
                                                             </button>
                                                         </div>
                                                         <div class="modal-body m-auto">
-                                                            <form th:id="${'editForm'+ userFromDB.id}"
+                                                            <form th:id="${'editForm'+ userFromDB.getId()}"
                                                                   th:method="PUT"
                                                                   th:action="@{/admin/{id}(id=${userFromDB.getId()})}">
                                                                 <fieldset disabled>
                                                                     <div class="form-group text-center">
                                                                         <label for="ID"><strong>ID</strong></label>
                                                                         <input type="number"
-                                                                               th:value="${userFromDB.id}"
+                                                                               th:value="${userFromDB.getId()}"
                                                                                name="id" required
                                                                                class="form-control form-control-sm"
                                                                                id="ID">
@@ -157,7 +157,7 @@
                                                                     <label for="firstName"><strong>First
                                                                         name</strong></label>
                                                                     <input type="text"
-                                                                           th:value="${userFromDB.firstName}"
+                                                                           th:value="${userFromDB.getFirstName()}"
                                                                            name="firstName" required
                                                                            class="form-control form-control-sm"
                                                                            id="firstName">
@@ -166,7 +166,7 @@
                                                                     <label for="lastName"><strong>Last
                                                                         name</strong></label>
                                                                     <input type="text"
-                                                                           th:value="${userFromDB.lastName}"
+                                                                           th:value="${userFromDB.getLastName()}"
                                                                            name="lastName" required
                                                                            class="form-control form-control-sm"
                                                                            id="lastName">
@@ -174,15 +174,15 @@
                                                                 <div class="form-group text-center">
                                                                     <label for="age"><strong>Age</strong></label>
                                                                     <input type="number"
-                                                                           th:value="${userFromDB.age}"
+                                                                           th:value="${userFromDB.getAge()}"
                                                                            name="age" required
                                                                            class="form-control form-control-sm"
                                                                            id="age">
                                                                 </div>
                                                                 <div class="form-group text-center">
                                                                     <label for="username"><strong>Email</strong></label>
-                                                                    <input type="text"
-                                                                           th:value="${userFromDB.username}"
+                                                                    <input type="email"
+                                                                           th:value="${userFromDB.getUsername()}"
                                                                            name="username" required
                                                                            class="form-control form-control-sm"
                                                                            id="username">
@@ -190,7 +190,7 @@
                                                                 <div class="form-group text-center">
                                                                     <label for="password"><strong>Password</strong></label>
                                                                     <input type="password"
-                                                                           th:value="${addUser.password}"
+                                                                           th:value="${userFromDB.getPassword()}"
                                                                            name="password"
                                                                            class="form-control form-control-sm"
                                                                            id="password">
@@ -203,9 +203,9 @@
                                                                             size="2">
                                                                         <th:block>
                                                                             <option th:each="role : ${allRoles}"
-                                                                                    th:text="${role}"
+                                                                                    th:text="${role.getName().replace('ROLE_', '')}"
                                                                                     th:value="${role.getId()}"
-                                                                                    th:selected="${userFromDB.roles.containsAll(role)}"></option>
+                                                                                    th:selected="${userFromDB.getRoles().containsAll(role)}"></option>
                                                                         </th:block>
                                                                     </select>
                                                                 </div>
@@ -216,7 +216,7 @@
                                                                     data-dismiss="modal">Close
                                                             </button>
                                                             <button type="submit"
-                                                                    th:form="${'editForm'+ userFromDB.id}"
+                                                                    th:form="${'editForm'+ userFromDB.getId()}"
                                                                     class="btn btn-primary">Edit
                                                             </button>
                                                         </div>
@@ -228,12 +228,12 @@
                                         <td>
                                             <!-- Button trigger modal Delete -->
                                             <button type="button" class="btn btn-danger" data-toggle="modal"
-                                                    th:data-target="${'#deleteUser'+ userFromDB.id}">
+                                                    th:data-target="${'#deleteUser'+ userFromDB.getId()}">
                                                 Delete
                                             </button>
                                             <!-- Button trigger modal Delete-end-->
                                             <!-- Modal Delete-->
-                                            <div class="modal fade" th:id="${'deleteUser'+ userFromDB.id}"
+                                            <div class="modal fade" th:id="${'deleteUser'+ userFromDB.getId()}"
                                                  tabindex="-1"
                                                  aria-labelledby="deleteModalLabel" aria-hidden="true">
                                                 <div class="modal-dialog">
@@ -247,14 +247,14 @@
                                                             </button>
                                                         </div>
                                                         <div class="modal-body m-auto">
-                                                            <form th:id="${'deleteForm'+ userFromDB.id}"
+                                                            <form th:id="${'deleteForm'+ userFromDB.getId()}"
                                                                   th:method="DELETE"
                                                                   th:action="@{/admin/{id}(id=${userFromDB.getId()})}">
                                                                 <fieldset disabled>
                                                                     <div class="form-group text-center">
                                                                         <label for="deleteId"><strong>ID</strong></label>
                                                                         <input type="number"
-                                                                               th:value="${userFromDB.id}"
+                                                                               th:value="${userFromDB.getId()}"
                                                                                class="form-control form-control-sm"
                                                                                name="deleteId"
                                                                                id="deleteId">
@@ -263,7 +263,7 @@
                                                                         <label for="deleteFirstName"><strong>First
                                                                             name</strong></label>
                                                                         <input type="text"
-                                                                               th:value="${userFromDB.firstName}"
+                                                                               th:value="${userFromDB.getFirstName()}"
                                                                                class="form-control form-control-sm"
                                                                                name="deleteFirstName"
                                                                                id="deleteFirstName">
@@ -272,7 +272,7 @@
                                                                         <label for="deleteLastName"><strong>Last
                                                                             name</strong></label>
                                                                         <input type="text"
-                                                                               th:value="${userFromDB.lastName}"
+                                                                               th:value="${userFromDB.getLastName()}"
                                                                                class="form-control form-control-sm"
                                                                                name="deleteLastName"
                                                                                id="deleteLastName">
@@ -280,15 +280,15 @@
                                                                     <div class="form-group text-center">
                                                                         <label for="deleteAge"><strong>Age</strong></label>
                                                                         <input type="number"
-                                                                               th:value="${userFromDB.age}"
+                                                                               th:value="${userFromDB.getAge()}"
                                                                                class="form-control form-control-sm"
                                                                                name="deleteAge"
                                                                                id="deleteAge">
                                                                     </div>
                                                                     <div class="form-group text-center">
                                                                         <label for="deleteEmail"><strong>Email</strong></label>
-                                                                        <input type="text"
-                                                                               th:value="${userFromDB.username}"
+                                                                        <input type="email"
+                                                                               th:value="${userFromDB.getUsername()}"
                                                                                class="form-control form-control-sm"
                                                                                name="deleteEmail"
                                                                                id="deleteEmail">
@@ -300,8 +300,8 @@
                                                                                 id="deleteRoles"
                                                                                 size="2">
                                                                             <th:block th:each="role : ${allRoles}">
-                                                                                <option th:text="${role}"
-                                                                                        th:value="${role.name}"></option>
+                                                                                <option th:text="${role.getName().replace('ROLE_', '')}"
+                                                                                        th:value="${role.getName()}"></option>
                                                                             </th:block>
                                                                         </select>
                                                                     </div>
@@ -313,7 +313,7 @@
                                                                     data-dismiss="modal">Close
                                                             </button>
                                                             <button type="submit"
-                                                                    th:form="${'deleteForm'+ userFromDB.id}"
+                                                                    th:form="${'deleteForm'+ userFromDB.getId()}"
                                                                     class="btn btn-danger">Delete
                                                             </button>
                                                         </div>
@@ -379,7 +379,7 @@
                                                     class="form-control form-control-sm" id="addRoles"
                                                     size="2">
                                                 <th:block th:each="role : ${allRoles}">
-                                                    <option th:text="${role}"
+                                                    <option th:text="${role.getName().replace('ROLE_', '')}"
                                                             th:value="${role.getId()}"></option>
                                                 </th:block>
                                             </select>
@@ -422,10 +422,10 @@
                                 <td th:text="${user.getFirstName()}"></td>
                                 <td th:text="${user.getLastName()}"></td>
                                 <td th:text="${user.getAge()}"></td>
-                                <td th:text="${user.getEmail()}"></td>
+                                <td th:text="${user.getUsername()}"></td>
                                 <td>
                                 <span th:each="role : ${user.getRoles()}">
-                                    <span th:text="${role}"></span>
+                                    <span th:text="${role.getName().replace('ROLE_', '')}"></span>
                                 </span>
                                 </td>
                             </tr>

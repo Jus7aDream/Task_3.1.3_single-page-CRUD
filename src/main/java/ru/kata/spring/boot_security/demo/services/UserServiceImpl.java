@@ -3,9 +3,6 @@ package ru.kata.spring.boot_security.demo.services;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,7 +14,7 @@ import java.util.List;
 
 @Service
 @Slf4j
-public class UserServiceImpl implements UserService, UserDetailsService {
+public class UserServiceImpl implements UserService {
     private final UserRepo userRepo;
     private final PasswordEncoder passwordEncoder;
 
@@ -56,9 +53,9 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Transactional
     @Override
     public void updateUser(User user) {
-        if (user.getPassword().isEmpty()) {
-            user.setPassword(userRepo.findUserByEmail(user.getUsername()).getPassword());
-        } else {
+        String oldPassword = findUserById(user.getId()).getPassword();
+        String newPassword = user.getPassword();
+        if(!oldPassword.equals(newPassword)) {
             user.setPassword(passwordEncoder.encode(user.getPassword()));
         }
         userRepo.save(user);
@@ -75,15 +72,5 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     public User getUserByUsername(String username) {
         return userRepo.findUserByEmail(username);
-    }
-
-    @Transactional(readOnly = true)
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepo.findUserByEmail(username);
-        if (user == null) {
-            throw new UsernameNotFoundException("User not found");
-        }
-        return user;
     }
 }
